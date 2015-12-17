@@ -5,13 +5,13 @@
     "version": "v0.1",
     "keywords": [],
     "active": 1,
-    "order": 1,
+    "order": 4,
     "providers": [
         "Modules\\Site\\Providers\\SiteServiceProvider",
         "Modules\\Site\\Providers\\RouteServiceProvider"
     ],
     "aliases":{},
     "files": [
-        
+
     ]
 }
