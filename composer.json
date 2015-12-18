@@ -1,5 +1,5 @@
 {
-	"name": "Modules/site",
+	"name": "bitsoflove/asgardcms-module-site",
 	"description": "",
     "type": "asgard-module",
     "require": {
