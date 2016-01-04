@@ -22,7 +22,7 @@ class SiteGateway {
         }
 
         //4. throw an exception if we couldn't find the site ID in the database
-        if(empty($siteId)) {
+        if(empty($siteId) && !\App::runningInConsole()) {
             $error = 'Host was not defined as a site on the database level: ' . $host;
             throw new \Exception($error);
         }
@@ -70,7 +70,7 @@ class SiteGateway {
     }
 
     public function host() {
-        return isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : $_SERVER['HTTP_HOST'];
+        return isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
     }
 
     private function getSiteIdFromDatabase($host) {

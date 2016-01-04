@@ -30,7 +30,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
     public function extendWith(Menu $menu)
     {
         $menu->group('Content', function (Group $group) {
-            $group->item(trans('Site'), function (Item $item) {
+            $group->item(trans('Sites'), function (Item $item) {
                 $item->icon('fa fa-sitemap');
                 $item->weight(0);
                 $item->route('admin.site.site.index');
