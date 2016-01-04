@@ -33,6 +33,13 @@ class SiteServiceProvider extends ServiceProvider
 
     private function registerBindings()
     {
+        //the multi site tenancy facade
+        $this->app->bind(
+            'site',
+            function () {
+                return new \Modules\Site\Facades\SiteGateway;
+            }
+        );
 
         $this->app->bind(
             'Modules\Site\Repositories\SiteLocaleRepository',
@@ -60,6 +67,8 @@ class SiteServiceProvider extends ServiceProvider
                 return new \Modules\Site\Repositories\Cache\CacheSiteDecorator($repository);
             }
         );
+
+
 
 // add bindings
 
