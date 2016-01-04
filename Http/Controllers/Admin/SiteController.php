@@ -25,13 +25,12 @@ class SiteController extends AdminBaseController
         $site = $this->site->find($id);
         if(empty($site)) {
             flash()->error('Could not change site, invalid ID!');
-        } else {
-            session(['site-id' => $id]);
-            flash()->success('Changed site to ' . $site->slug);
+            return \Redirect::back();
         }
 
-
-        return \Redirect::back();
+        $url = 'http://' . $site->siteLocales()->first()->url . $_GET['uri'];
+        header("Location: $url");
+        exit();
     }
 
     /**
