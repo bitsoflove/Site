@@ -13,7 +13,7 @@ class SiteGateway {
         $host = $this->host();
 
         //2. see if we already know the site ID from this host in the cache
-        $cacheKey = 'site_' . $host;
+        $cacheKey = 'site_id_' . $host;
         $siteId = Cache::get($cacheKey);
 
         //3. if we couldn't find an entry in the cache, find the site ID via the database
@@ -31,6 +31,42 @@ class SiteGateway {
         $expiresAt = Carbon::now()->addMinutes(10);
         Cache::put($cacheKey, $siteId, $expiresAt);
         return $siteId;
+    }
+
+    public function current() {
+        $id = $this->id();
+
+        $cacheKey = 'site_current_' . $id;
+        $site = Cache::get($cacheKey);
+
+        if(empty($site)) {
+            $site = \App\Models\Site::where('id', $id)->first();
+        }
+
+        $expiresAt = Carbon::now()->addMinutes(10);
+        Cache::put($cacheKey, $site, $expiresAt);
+        return $site;
+    }
+
+    public function currentLocale() {
+        $id = $this->id();
+        $host = $this->host();
+
+        $cacheKey = 'site_currentLocale_' . $id . '_' . $host;
+        $currentLocale = Cache::get($cacheKey);
+
+        if(empty($currentLocale)) {
+            $site = $this->current();
+
+            $locale = \App('laravellocalization')->getCurrentLocale();
+            $currentLocale = $site->siteLocales()->whereHas('locale', function($q) use ($locale) {
+                $q->where('locale', $locale);
+            })->first();
+        }
+
+        $expiresAt = Carbon::now()->addMinutes(10);
+        Cache::put($cacheKey, $currentLocale, $expiresAt);
+        return $currentLocale;
     }
 
     public function host() {
