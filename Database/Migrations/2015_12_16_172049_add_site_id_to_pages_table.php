@@ -15,7 +15,7 @@ class AddSiteIdToPagesTable extends Migration {
 		Schema::table('page__pages', function(Blueprint $table)
 		{
 				$table->integer('site_id')->unsigned()->nullable();//->index('page__pages_site_id_index');
-				$table->foreign('site_id')->references('id')->on('sites')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+				$table->foreign('site_id', 'p_p_site_id')->references('id')->on('sites')->onUpdate('RESTRICT')->onDelete('RESTRICT');
 		});
 	}
 
