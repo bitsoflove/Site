@@ -7,6 +7,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class SiteGateway {
+
+    public function setLocale() {
+        $locale = $this->getLocale();
+        \App::setLocale($locale);
+        \App('laravellocalization')->setLocale($locale);
+    }
+
     public function id() {
 
         //1. get current host
@@ -58,7 +65,7 @@ class SiteGateway {
         if(empty($currentLocale)) {
             $site = $this->current();
 
-            $locale = \App('laravellocalization')->getCurrentLocale();
+            $locale = $this->getLocale(); //\App('laravellocalization')->getCurrentLocale();
             $currentLocale = $site->siteLocales()->whereHas('locale', function($q) use ($locale) {
                 $q->where('locale', $locale);
             })->first();
@@ -78,4 +85,17 @@ class SiteGateway {
         $siteId = empty($siteLocale) ? null :  $siteLocale->site_id;
         return $siteId;
     }
+
+    private function getLocale() {
+        $host = \Site::host();
+        $siteLocale = \App\Models\SiteLocale::where('url', $host)->first();
+
+        if(empty($siteLocale)) {
+            $error = 'No SiteLocale defined on the database level for host ' . $host;
+            throw new \Exception($error);
+        }
+
+        $locale = $siteLocale->locale->locale;
+        return $locale;
+      }
 }
