@@ -65,7 +65,7 @@ class SiteGateway {
         if(empty($currentLocale)) {
             $site = $this->current();
 
-            $locale = $this->getLocale(); //\App('laravellocalization')->getCurrentLocale();
+            $locale = \App('laravellocalization')->getCurrentLocale();
             $currentLocale = $site->siteLocales()->whereHas('locale', function($q) use ($locale) {
                 $q->where('locale', $locale);
             })->first();
