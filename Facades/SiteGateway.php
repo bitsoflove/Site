@@ -66,9 +66,7 @@ class SiteGateway {
             $site = $this->current();
 
             $locale = \App('laravellocalization')->getCurrentLocale();
-            $currentLocale = $site->siteLocales()->whereHas('locale', function($q) use ($locale) {
-                $q->where('locale', $locale);
-            })->first();
+            $currentLocale = $site->siteLocales()->where('locale', $locale)->first();
         }
 
         $expiresAt = Carbon::now()->addMinutes(10);
@@ -95,7 +93,7 @@ class SiteGateway {
             throw new \Exception($error);
         }
 
-        $locale = $siteLocale->locale->locale;
+        $locale = $siteLocale->locale;//->locale;
         return $locale;
       }
 }
