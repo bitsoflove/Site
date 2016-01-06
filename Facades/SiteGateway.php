@@ -76,7 +76,13 @@ class SiteGateway {
     }
 
     public function host() {
-        return isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
+        $fullHost = isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
+
+        //remove port from host
+        $split = explode(':', $fullHost);
+
+        $host = $split[0];
+        return $host;
     }
 
     private function getSiteIdFromDatabase($host) {
