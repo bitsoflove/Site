@@ -29,5 +29,15 @@
 		"psr-4": {
 			"Modules\\Site\\": ""
 		}
-	}
+	},
+    "repositories": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/nWidart/modules"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:bitsoflove/Core.git"
+        }
+    ]
 }
