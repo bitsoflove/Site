@@ -14,6 +14,10 @@ class SiteGateway {
         \App('laravellocalization')->setLocale($locale);
     }
 
+    public function all() {
+        return \App\Models\Site::all();
+    }
+
     public function id() {
 
         //1. get current host
@@ -78,7 +82,7 @@ class SiteGateway {
     public function host() {
         $fullHost = isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
 
-        //remove port from host
+        //remove port from host (on testing environments, the host will contain the port, removing this line would make the tests fail)
         $split = explode(':', $fullHost);
 
         $host = $split[0];
@@ -93,14 +97,23 @@ class SiteGateway {
 
     private function getLocale() {
         $host = \Site::host();
-        $siteLocale = \App\Models\SiteLocale::where('url', $host)->first();
+        $cacheKey = 'site_locale_' . $host;
 
-        if(empty($siteLocale)) {
-            $error = 'No SiteLocale defined on the database level for host ' . $host;
-            throw new \Exception($error);
+        $locale = Cache::get($cacheKey);
+
+        if(empty($locale)) {
+            $siteLocale = \App\Models\SiteLocale::where('url', $host)->first();
+
+            if(empty($siteLocale)) {
+                $error = 'No SiteLocale defined on the database level for host ' . $host;
+                throw new \Exception($error);
+            }
+
+            $locale = $siteLocale->locale;
         }
 
-        $locale = $siteLocale->locale;//->locale;
+        $expiresAt = Carbon::now()->addMinutes(10);
+        Cache::put($cacheKey, $locale, $expiresAt);
         return $locale;
       }
 }
