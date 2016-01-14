@@ -19,6 +19,9 @@ class SiteGateway {
     }
 
     public function id() {
+        if(app()->runningInConsole()) {
+            return null;
+        }
 
         //1. get current host
         $host = $this->host();
@@ -45,6 +48,10 @@ class SiteGateway {
     }
 
     public function current() {
+        if(app()->runningInConsole()) {
+            return null;
+        }
+
         $id = $this->id();
 
         $cacheKey = 'site_current_' . $id;
@@ -60,6 +67,10 @@ class SiteGateway {
     }
 
     public function currentLocale() {
+        if(app()->runningInConsole()) {
+            return null;
+        }
+
         $id = $this->id();
         $host = $this->host();
 
@@ -96,6 +107,10 @@ class SiteGateway {
     }
 
     private function getLocale() {
+        if(app()->runningInConsole()) {
+            return null;
+        }
+
         $host = \Site::host();
         $cacheKey = 'site_locale_' . $host;
 
