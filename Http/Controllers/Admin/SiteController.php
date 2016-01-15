@@ -20,6 +20,27 @@ class SiteController extends AdminBaseController
         $this->site = $site;
     }
 
+    private function removePrefix($str, $prefix) {
+        if (substr($str, 0, strlen($prefix)) == $prefix) {
+            $str = substr($str, strlen($prefix));
+        }
+        return $str;
+    }
+
+    private function getSharedDomain($site) {
+        //remove prefix
+        $currentSiteUrl = \Site::current()->url;
+        $currentSiteUrl = $this->removePrefix($currentSiteUrl, 'www.');
+
+        //remove first subdomain
+        $split = explode('.', $currentSiteUrl);
+        $firstSubDomain = array_shift($split);
+        $domain = implode('.', $split);
+
+        return $domain;
+    }
+
+
     public function set($id) {
 
         $site = $this->site->find($id);
@@ -28,7 +49,9 @@ class SiteController extends AdminBaseController
             return \Redirect::back();
         }
 
-        $url = 'http://' . $site->siteLocales()->first()->url . $_GET['uri'];
+        $domain = $this->getSharedDomain($site);
+
+        $url = 'http://' . $site->siteLocales()->where('url', 'LIKE', "%.$domain")->first()->url . $_GET['uri'];
         header("Location: $url");
         exit();
     }
