@@ -8,7 +8,7 @@
     </a>
     <ul class="dropdown-menu language-menu">
         @foreach($user->sites()->get() as $site)
-            <li class="{{ App::getLocale() == $localeCode ? 'active' : '' }}">
+            <li class="{{ ((\Site::id() == $site->id)) ? 'active' : '' }}">
 
                 <a href="{{ URL::route('admin.site.site.current', $site->id) }}?uri={{$_SERVER['REQUEST_URI']}}">
                     {{$site->slug}}
