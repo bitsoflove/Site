@@ -28,14 +28,18 @@ class SiteController extends AdminBaseController
     }
 
     private function getSharedDomain($site) {
-        //remove prefix
-        $currentSiteUrl = \Site::current()->url;
-        $currentSiteUrl = $this->removePrefix($currentSiteUrl, 'www.');
+        //remove www prefix from current host if it exists
+        $currentHost = \Site::host();
+        $currentHost = $this->removePrefix($currentHost, 'www.');
 
         //remove first subdomain
-        $split = explode('.', $currentSiteUrl);
+        $split = explode('.', $currentHost);
         $firstSubDomain = array_shift($split);
         $domain = implode('.', $split);
+
+        if(empty($domain)) {
+            throw new \Exception("Could not get shared domain from " . $currentHost);
+        }
 
         return $domain;
     }
@@ -50,8 +54,13 @@ class SiteController extends AdminBaseController
         }
 
         $domain = $this->getSharedDomain($site);
+        $siteLocale = $site->siteLocales()->where('url', 'LIKE', "%.$domain")->first();
 
-        $url = 'http://' . $site->siteLocales()->where('url', 'LIKE', "%.$domain")->first()->url . $_GET['uri'];
+        if(empty($siteLocale)) {
+            throw new \Exception("Could not get siteLocale for site " . $site->slug . " LIKE %.$domain");
+        }
+
+        $url = 'http://' . $siteLocale->url . $_GET['uri'];
         header("Location: $url");
         exit();
     }
