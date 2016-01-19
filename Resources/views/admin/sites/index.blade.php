@@ -37,5 +37,5 @@
         'view' => false,
         'edit' => true,
         'delete' => true,
-    ]
+    ],
 ])

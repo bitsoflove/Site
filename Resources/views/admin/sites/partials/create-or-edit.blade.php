@@ -17,10 +17,16 @@
 @stop
 
 @section('content')
+
+    <?php
+        if(!isset($supportedLocales)) {
+            $supportedLocales = LaravelLocalization::getSupportedLocales();
+        }
+    ?>
+
     {!! Form::open(['route' => ["admin.site.site.$route", $model->id], 'method' => "$method"]) !!}
     <div class="row">
         <div class="col-md-12">
-
 
             <div class="box box-primary">
                 <div class="box-header">
@@ -28,12 +34,12 @@
                 </div>
                 <div class="box-body">
                     <div class="nav-tabs-custom">
-                        @include('partials.form-tab-headers')
+                        @include('partials.form-tab-headers', ['locales' => $supportedLocales])
                         <div class="tab-content">
                             <?php $i = 0; ?>
-                            @foreach (LaravelLocalization::getSupportedLocales() as $locale => $language)
+                                @foreach ($supportedLocales as $locale => $language)
                                 <?php $i++; ?>
-                                <div class="tab-pane {{ locale() == $locale ? 'active' : '' }}" id="tab_{{ $i }}">
+                                <div class="tab-pane {{ locale() == $locale ? 'active' : '' }}" id="tab_{{ $locale }}">
                                     @include('site::admin.sites.partials.fields-translatable', ['lang' => $locale, 'model' => $model])
                                 </div>
                             @endforeach
