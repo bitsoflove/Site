@@ -20,13 +20,6 @@
 ])
 
 @include('fields::text', [
-    'title' => 'Logo',
-    'name' => $locale . '[logo]',
-    'placeholder' => 'logo',
-    'value' => empty($model->translate($locale)) ? null : $model->translate($locale)->logo,
-])
-
-@include('fields::text', [
     'title' => 'Theme',
     'name' => $locale . '[theme]',
     'placeholder' => 'theme',
