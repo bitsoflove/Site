@@ -32,6 +32,10 @@
             'created_at' => 'Created at',
             'updated_at' => 'Updated at',
         ],
+        'classes' => [
+            'created_at' => 'wrap',
+            'updated_at' => 'wrap',
+        ]
     ],
     'actions' => [
         'view' => false,
