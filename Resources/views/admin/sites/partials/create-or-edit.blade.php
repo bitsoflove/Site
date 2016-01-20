@@ -22,6 +22,10 @@
         if(!isset($supportedLocales)) {
             $supportedLocales = LaravelLocalization::getSupportedLocales();
         }
+        if(!isset($activeLocale)) {
+            $allLocales = array_keys($supportedLocales);
+            $activeLocale = $allLocales[0];
+        }
     ?>
 
     {!! Form::open(['route' => ["admin.site.site.$route", $model->id], 'method' => "$method"]) !!}
@@ -34,12 +38,12 @@
                 </div>
                 <div class="box-body">
                     <div class="nav-tabs-custom">
-                        @include('partials.form-tab-headers', ['locales' => $supportedLocales])
+                        @include('partials.form-tab-headers', ['locales' => $supportedLocales, 'activeLocale' => $activeLocale])
                         <div class="tab-content">
                             <?php $i = 0; ?>
                                 @foreach ($supportedLocales as $locale => $language)
                                 <?php $i++; ?>
-                                <div class="tab-pane {{ locale() == $locale ? 'active' : '' }}" id="tab_{{ $locale }}">
+                                <div class="tab-pane {{ $activeLocale == $locale ? 'active' : '' }}" id="tab_{{ $locale }}">
                                     @include('site::admin.sites.partials.fields-translatable', ['lang' => $locale, 'model' => $model])
                                 </div>
                             @endforeach
