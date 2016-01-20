@@ -32,3 +32,22 @@
     'placeholder' => 'UA-XXXXXXXX',
     'value' => empty($model->translate($locale)) ? null : $model->translate($locale)->google_analytics_code,
 ])
+
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        @include('fields::text', [
+            'title' => 'Contact name',
+            'name' => $locale . '[contact_name]',
+            'placeholder' => 'name',
+            'value' => empty($model->translate($locale)) ? null : $model->translate($locale)->contact_name,
+        ])
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        @include('fields::text', [
+            'title' => 'Contact e-mail',
+            'name' => $locale . '[contact_email]',
+            'placeholder' => 'e-mail',
+            'value' => empty($model->translate($locale)) ? null : $model->translate($locale)->contact_email,
+        ])
+    </div>
+</div>
