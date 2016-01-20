@@ -14,7 +14,6 @@ class RemoveLogoFromSiteLocales extends Migration {
 	{
         Schema::table('site_locales', function(Blueprint $table)
         {
-            //facebook open graph tags
             $table->dropColumn('logo');
         });
 	}
