@@ -110,7 +110,11 @@ class SiteController extends AdminBaseController
      */
     public function edit(Site $site)
     {
-        return view('site::admin.sites.edit', compact('site'));
+        $loc = $site->siteLocales->lists('title', 'locale')->toArray();
+        return view('site::admin.sites.edit', [
+            'site' => $site,
+            'supportedLocales' => $loc,
+        ]);
     }
 
     /**
