@@ -45,6 +45,9 @@
                                 <?php $i++; ?>
                                 <div class="tab-pane {{ $activeLocale == $locale ? 'active' : '' }}" id="tab_{{ $locale }}">
                                     @include('site::admin.sites.partials.fields-translatable', ['lang' => $locale, 'model' => $model])
+
+                                    {{--see resources/views/admin/site--}}
+                                    @include('admin.site.create-or-edit-extra-fields-translatable', ['lang' => $locale, 'model' => $model])
                                 </div>
                             @endforeach
                         </div>
@@ -59,6 +62,7 @@
                     </div>
                     <div class="box-body">
                         @include('site::admin.sites.partials.fields-non-translatable', ['lang' => $locale, 'model' => $model ])
+                        @include('admin.site.create-or-edit-extra-fields-non-translatable', ['lang' => $locale, 'model' => $model])
                     </div>
                 </div>
                 <div class="box-footer">
