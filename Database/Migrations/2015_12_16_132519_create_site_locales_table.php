@@ -16,7 +16,6 @@ class CreateSiteLocalesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('site_id')->unsigned()->index('site_locales_site_id_foreign');
-			$table->integer('locale_id')->unsigned()->index('site_locales_locale_id_foreign');
 			$table->string('title', 100);
 			$table->string('url');
 			$table->text('description', 16777215);
