@@ -100,6 +100,16 @@ class SiteGateway {
         return $host;
     }
 
+    public function locales() {
+        $currentSite = $this->current();
+        $locales = [];
+        foreach($currentSite->siteLocales as $locale) {
+            $loc = $locale->locale;
+            $locales[$loc] = $loc;
+        }
+        return $locales;
+    }
+
     private function getSiteIdFromDatabase($host) {
         $siteLocale = SiteLocale::where('url', '=', $host)->first();
         $siteId = empty($siteLocale) ? null :  $siteLocale->site_id;
@@ -131,4 +141,7 @@ class SiteGateway {
         Cache::put($cacheKey, $locale, $expiresAt);
         return $locale;
       }
+
+
+
 }
