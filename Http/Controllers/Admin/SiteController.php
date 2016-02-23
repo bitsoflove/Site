@@ -20,31 +20,6 @@ class SiteController extends AdminBaseController
         $this->site = $site;
     }
 
-    private function removePrefix($str, $prefix) {
-        if (substr($str, 0, strlen($prefix)) == $prefix) {
-            $str = substr($str, strlen($prefix));
-        }
-        return $str;
-    }
-
-    private function getSharedDomain($site) {
-        //remove www prefix from current host if it exists
-        $currentHost = \Site::host();
-        $currentHost = $this->removePrefix($currentHost, 'www.');
-
-        //remove first subdomain
-        $split = explode('.', $currentHost);
-        $firstSubDomain = array_shift($split);
-        $domain = implode('.', $split);
-
-        if(empty($domain)) {
-            throw new \Exception("Could not get shared domain from " . $currentHost);
-        }
-
-        return $domain;
-    }
-
-
     public function set($id) {
 
         $site = $this->site->find($id);
@@ -53,7 +28,7 @@ class SiteController extends AdminBaseController
             return \Redirect::back();
         }
 
-        $domain = $this->getSharedDomain($site);
+        $domain = $site->getSharedDomain();
         $siteLocale = $site->siteLocales()->where('url', 'LIKE', "%.$domain")->first();
 
         if(empty($siteLocale)) {
