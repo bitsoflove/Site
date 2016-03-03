@@ -24,7 +24,7 @@ class SiteGateway {
         }
 
         //1. get current host
-        $host = $this->host();
+        $host = $this->host(true);
 
         //2. see if we already know the site ID from this host in the cache
         $cacheKey = 'site_id_' . $host;
@@ -72,7 +72,7 @@ class SiteGateway {
         }
 
         $id = $this->id();
-        $host = $this->host();
+        $host = $this->host(true);
 
         $cacheKey = 'site_currentLocale_' . $id . '_' . $host;
         $currentLocale = Cache::get($cacheKey);
@@ -82,7 +82,7 @@ class SiteGateway {
 
             $this->setLocale();
             $locale = \App('laravellocalization')->getCurrentLocale();
-            $currentLocale = $site->siteLocales()->where('locale', $locale)->first();
+            $currentLocale = $site->siteLocales()->where('locale', $locale)->where('url', 'LIKE', '%' . $host) ->first();
         }
 
         $expiresAt = Carbon::now()->addMinutes(10);
@@ -90,13 +90,18 @@ class SiteGateway {
         return $currentLocale;
     }
 
-    public function host() {
+    public function host($removeWww=false) {
         $fullHost = isset($_SERVER['HTTPS_HOST']) ? $_SERVER['HTTPS_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;
 
-        //remove port from host (on testing environments, the host will contain the port, removing this line would make the tests fail)
+        //remove port from host (on testing environments, the host will contain the port, removing this would make the tests fail)
         $split = explode(':', $fullHost);
-
         $host = $split[0];
+
+
+        if($removeWww) {
+            $host = $this->removePrefix($host, 'www.');
+        }
+
         return $host;
     }
 
@@ -111,7 +116,8 @@ class SiteGateway {
     }
 
     private function getSiteIdFromDatabase($host) {
-        $siteLocale = SiteLocale::where('url', '=', $host)->first();
+
+        $siteLocale = SiteLocale::where('url', 'LIKE', '%' .  $host)->first();
         $siteId = empty($siteLocale) ? null :  $siteLocale->site_id;
         return $siteId;
     }
@@ -121,13 +127,13 @@ class SiteGateway {
             return null;
         }
 
-        $host = \Site::host();
+        $host = \Site::host(true);
         $cacheKey = 'site_locale_' . $host;
 
         $locale = Cache::get($cacheKey);
 
         if(empty($locale)) {
-            $siteLocale = \App\Models\SiteLocale::where('url', $host)->first();
+            $siteLocale = \App\Models\SiteLocale::where('url', 'LIKE', '%' .  $host)->first();
 
             if(empty($siteLocale)) {
                 $error = 'No SiteLocale defined on the database level for host ' . $host;
@@ -141,6 +147,14 @@ class SiteGateway {
         Cache::put($cacheKey, $locale, $expiresAt);
         return $locale;
       }
+
+
+    private function removePrefix($str, $prefix) {
+        if (substr($str, 0, strlen($prefix)) == $prefix) {
+            $str = substr($str, strlen($prefix));
+        }
+        return $str;
+    }
 
 
 
