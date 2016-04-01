@@ -35,7 +35,7 @@ class SiteController extends AdminBaseController
             throw new \Exception("Could not get siteLocale for site " . $site->slug . " LIKE %.$domain");
         }
 
-        $url = 'http://' . $siteLocale->url . $_GET['uri'];
+        $url = 'http://' . $siteLocale->url . '/backend';//0 . $_GET['uri'];
         header("Location: $url");
         exit();
     }
