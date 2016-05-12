@@ -28,7 +28,7 @@ class Filter extends Model
      */
     public function sites()
     {
-        return $this->belongsToMany(Site::class, 'site_filter', 'filter_id', 'site_id');
+        return $this->belongsToMany(Site::class, 'filter_site', 'filter_id', 'site_id');
     }
 
     /**

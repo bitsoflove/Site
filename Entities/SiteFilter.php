@@ -10,7 +10,7 @@ class SiteFilter extends Model
     /**
      * @var string
      */
-    protected $table = 'site_filter';
+    protected $table = 'filter_site';
     
     /**
      * @var array

@@ -133,7 +133,7 @@ class Site extends Model
      */
     public function filters()
     {
-        return $this->belongsToMany(Filter::class, 'site_filter', 'site_id', 'filter_id');
+        return $this->belongsToMany(Filter::class, 'filter_site', 'site_id', 'filter_id');
     }
 
     /**
