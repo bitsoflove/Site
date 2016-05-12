@@ -2,7 +2,7 @@
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-sitemap"></i>
     <span>
-        {{\App\Models\Site::where('id', '=', \Site::id())->first()->slug}}
+        {{\Modules\Site\Entities\Site::where('id', '=', \Site::id())->first()->slug}}
         <i class="caret"></i>
     </span>
     </a>

@@ -2,7 +2,7 @@
 
 use Laracasts\Flash\Flash;
 use Illuminate\Http\Request;
-use App\Models\SiteLocale;
+use Modules\Site\Entities\SiteLocale;
 use Modules\Site\Repositories\SiteLocaleRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 

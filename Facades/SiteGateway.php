@@ -2,7 +2,8 @@
 
 namespace Modules\Site\Facades;
 
-use App\Models\SiteLocale;
+use Modules\Site\Entities\SiteLocale;
+use Modules\Site\Entities\Site;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -15,7 +16,7 @@ class SiteGateway {
     }
 
     public function all() {
-        return \App\Models\Site::all();
+        return Site::all();
     }
 
     public function id() {
@@ -58,7 +59,7 @@ class SiteGateway {
         $site = Cache::get($cacheKey);
 
         if(empty($site)) {
-            $site = \App\Models\Site::where('id', $id)->first();
+            $site = Site::where('id', $id)->first();
         }
 
         $expiresAt = Carbon::now()->addMinutes(10);
@@ -133,7 +134,7 @@ class SiteGateway {
         $locale = Cache::get($cacheKey);
 
         if(empty($locale)) {
-            $siteLocale = \App\Models\SiteLocale::where('url', 'LIKE', '%' .  $host)->first();
+            $siteLocale = SiteLocale::where('url', 'LIKE', '%' .  $host)->first();
 
             if(empty($siteLocale)) {
                 $error = 'No SiteLocale defined on the database level for host ' . $host;

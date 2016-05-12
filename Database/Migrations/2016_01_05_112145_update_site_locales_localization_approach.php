@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\SiteLocale;
+use Modules\Site\Entities\SiteLocale;
 
 class UpdateSiteLocalesLocalizationApproach extends Migration {
 

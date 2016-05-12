@@ -3,5 +3,5 @@
     'cta' => 'create',
     'route' => 'store',
     'method' => 'POST',
-    'model' => new App\Models\Site(),
+    'model' => new  Modules\Site\Entities\Site(),
 ])
