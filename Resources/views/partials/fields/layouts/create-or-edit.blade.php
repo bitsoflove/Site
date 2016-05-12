@@ -2,13 +2,9 @@
 
 @section('content-header')
     <h1>
-        {{ trans("site::sites.title.$operation site") }}
+        {{$title}}
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="{{ route('dashboard.index') }}"><i class="fa fa-dashboard"></i> {{ trans('core::core.breadcrumb.home') }}</a></li>
-        <li><a href="{{ route('admin.site.site.index') }}">{{ trans('site::sites.title.sites') }}</a></li>
-        <li class="active">{{ trans("site::sites.title.$operation site") }}</li>
-    </ol>
+    @include('site::partials.fields.layouts.partials.breadcrumbs', compact('breadcrumbs'))
 @stop
 
 @section('styles')
@@ -17,40 +13,30 @@
 @stop
 
 @section('content')
-
-    <?php
-        if(!isset($supportedLocales)) {
-            $supportedLocales = LaravelLocalization::getSupportedLocales();
-        }
-        if(!isset($activeLocale)) {
-            $allLocales = array_keys($supportedLocales);
-            $activeLocale = $allLocales[0];
-        }
-    ?>
-
-    {!! Form::open(['route' => ["admin.site.site.$route", $model->id], 'method' => "$method"]) !!}
+    {!! Form::open(['route' => ["admin.transpoc.product.$route", $product->id], 'method' => "$method"]) !!}
     <div class="row">
         <div class="col-md-12">
-
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title">{{ trans('core::core.title.translatable fields') }}</h3>
                 </div>
                 <div class="box-body">
                     <div class="nav-tabs-custom">
-                        @include('partials.form-tab-headers', ['locales' => $supportedLocales, 'activeLocale' => $activeLocale])
+                        @include('partials.form-tab-headers')
                         <div class="tab-content">
                             <?php $i = 0; ?>
-                                @foreach ($supportedLocales as $locale => $language)
+                            @foreach (LaravelLocalization::getSupportedLocales() as $locale => $language)
                                 <?php $i++; ?>
-                                <div class="tab-pane {{ $activeLocale == $locale ? 'active' : '' }}" id="tab_{{ $locale }}">
-                                    @include('site::admin.sites.partials.fields-translatable', ['lang' => $locale, 'model' => $model])
+                                <div class="tab-pane {{ locale() == $locale ? 'active' : '' }}" id="tab_{{ $i }}">
+                                    @include('transpoc::admin.products.partials.fields-translatable', ['lang' => $locale, 'product' => $product])
                                 </div>
                             @endforeach
+
                         </div>
                     </div> {{-- end nav-tabs-custom --}}
                 </div>
             </div>
+
 
 
             <div class="box box-primary">
@@ -58,7 +44,7 @@
                         <h3 class="box-title">{{ trans('core::core.title.non translatable fields') }}</h3>
                     </div>
                     <div class="box-body">
-                        @include('site::admin.sites.partials.fields-non-translatable', ['lang' => $locale, 'model' => $model ])
+{{--                        @include('transpoc::admin.products.partials.fields-non-translatable', ['lang' => $locale, 'product' => $product ])--}}
                     </div>
                 </div>
                 <div class="box-footer">
@@ -68,9 +54,9 @@
                 </div>
             </div>
 
+
         </div>
     </div>
-
     {!! Form::close() !!}
 @stop
 
@@ -89,7 +75,7 @@
         $( document ).ready(function() {
             $(document).keypressAction({
                 actions: [
-                    { key: 'b', route: "<?= route('admin.site.site.index') ?>" }
+                    { key: 'b', route: "<?= route('admin.transpoc.product.index') ?>" }
                 ]
             });
         });

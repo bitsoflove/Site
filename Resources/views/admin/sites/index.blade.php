@@ -1,4 +1,4 @@
-@extends('fields::layouts.index', [
+@extends('site::partials.fields.layouts.index', [
     'title' => trans('site::sites.title.sites'),
     'breadcrumbs' => [
         [
