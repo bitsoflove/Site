@@ -1,6 +1,13 @@
 <?php namespace Modules\Site\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\Site\Entities\Site;
+use Modules\Site\Entities\SiteLocale;
+use Modules\Site\Facades\SiteGateway;
+use Modules\Site\Repositories\Cache\CacheSiteDecorator;
+use Modules\Site\Repositories\Cache\CacheSiteLocaleDecorator;
+use Modules\Site\Repositories\Eloquent\EloquentSiteLocaleRepository;
+use Modules\Site\Repositories\Eloquent\EloquentSiteRepository;
 
 class SiteServiceProvider extends ServiceProvider
 {
@@ -10,6 +17,16 @@ class SiteServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
+
+
+    public function boot(){
+        $this->publishes([
+            __DIR__ . '/../Resources/views' => base_path('resources/views/asgard/site'),
+        ]);
+        
+        $this->loadViewsFrom(base_path('resources/views/asgard/site'), 'site');
+        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'site');
+    }
 
     /**
      * Register the service provider.
@@ -37,20 +54,20 @@ class SiteServiceProvider extends ServiceProvider
         $this->app->bind(
             'site',
             function () {
-                return new \Modules\Site\Facades\SiteGateway;
+                return new SiteGateway;
             }
         );
 
         $this->app->bind(
             'Modules\Site\Repositories\SiteLocaleRepository',
             function () {
-                $repository = new \Modules\Site\Repositories\Eloquent\EloquentSiteLocaleRepository(new \App\Models\SiteLocale());
+                $repository = new EloquentSiteLocaleRepository(new SiteLocale());
 
                 if (! config('app.cache')) {
                     return $repository;
                 }
 
-                return new \Modules\Site\Repositories\Cache\CacheSiteLocaleDecorator($repository);
+                return new CacheSiteLocaleDecorator($repository);
             }
         );
 
@@ -58,13 +75,13 @@ class SiteServiceProvider extends ServiceProvider
         $this->app->bind(
             'Modules\Site\Repositories\SiteRepository',
             function () {
-                $repository = new \Modules\Site\Repositories\Eloquent\EloquentSiteRepository(new \App\Models\Site());
+                $repository = new EloquentSiteRepository(new Site());
 
                 if (! config('app.cache')) {
                     return $repository;
                 }
 
-                return new \Modules\Site\Repositories\Cache\CacheSiteDecorator($repository);
+                return new CacheSiteDecorator($repository);
             }
         );
 
